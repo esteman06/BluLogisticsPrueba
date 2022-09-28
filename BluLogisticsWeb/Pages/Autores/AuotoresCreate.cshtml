@@ -1,0 +1,25 @@
+﻿@page
+@model BluLogistics.Entitys.AutoresView
+@{
+    ViewData["Title"] = "Create";
+}   
+<p>
+    <a asp-action="Create">Nuevo</a>
+</p>
+<div class="border">
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="container" style="padding:30px;">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <label asp-for="Nombre"></label>
+                        </div>
+                        <div class="col-sm-4">
+                            <label asp-for="Apellidos"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>       
+    </form>
+</div>
