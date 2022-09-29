@@ -69,9 +69,9 @@ namespace BluLogisticsService
 
             #region Dependencies
             ////Administración de información
-            services.AddScoped<IAutoresService, AutoresService>();
-            services.AddScoped<IEditorialService, EditorialService>();
-            services.AddScoped<ILibrosServices, LibrosServices>();
+            //services.AddScoped<IAutoresService, AutoresService>();
+            //services.AddScoped<IEditorialService, EditorialService>();
+            //services.AddScoped<ILibrosServices, LibrosServices>();
 
             #endregion Dependencies
 

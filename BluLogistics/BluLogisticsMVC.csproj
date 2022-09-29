@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BluLogistics.DataModel\BluLogistics.DataModel.csproj" />
+    <ProjectReference Include="..\BluLogistics.Entitys\BluLogistics.Entitys.csproj" />
+  </ItemGroup>
+
+</Project>

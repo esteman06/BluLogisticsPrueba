@@ -1,0 +1,47 @@
+﻿@model IEnumerable<BluLogistics.Entitys.EditorialesView>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Crear Nueva Editorial</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.EditorialesID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sede)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EditorialesID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sede)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.EditorialesID">Modificar</a> |
+                <a asp-action="Details" asp-route-id="@item.EditorialesID">Detalle</a> |
+                <a asp-action="Delete" asp-route-id="@item.EditorialesID">Borrar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
