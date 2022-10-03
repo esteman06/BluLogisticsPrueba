@@ -181,8 +181,16 @@ namespace BluLogisticsMVC.Services
                 var libro = await _context.Libros.Where(x => x.LibrosID.Equals(libroID)).FirstOrDefaultAsync();
                 if (libro != null)
                 {
-                    _context.Libros.Remove(libro);
-                    await _context.SaveChangesAsync();
+                    var autorHasLibro = await _context.Autores_Has_Libros.Where(x => x.LibrosID.Equals(libroID)).FirstOrDefaultAsync();
+                    if (autorHasLibro != null) 
+                    {
+                        _context.Autores_Has_Libros.Remove(autorHasLibro);
+                        await _context.SaveChangesAsync();
+
+                        _context.Libros.Remove(libro);
+                        await _context.SaveChangesAsync();
+                    }
+                    
                     result = 1;
                 }
                 return result;

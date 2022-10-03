@@ -1,0 +1,48 @@
+﻿@model BluLogistics.Entitys.LibrosView
+
+@{
+    ViewData["Title"] = "Detalle";
+}
+
+<h1>Detalle</h1>
+
+<div>
+    <h4>Libro</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NombreEditorial)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NombreEditorial)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NombreAutor)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NombreAutor)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Sinopsis)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Sinopsis)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NPaginas)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NPaginas)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.AutoresID">Modificar</a> |
+    <a asp-action="Index">Volver</a>
+</div>
