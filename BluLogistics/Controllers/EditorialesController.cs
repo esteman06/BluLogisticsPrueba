@@ -36,14 +36,14 @@ namespace BluLogisticsMVC.Controllers
         }
 
         //GET: EditorialesController/Details/guid
-        public async Task<ActionResult> Details(Guid editorialID)
+        public async Task<IActionResult> Details([FromRoute]Guid id)
         {
             try
             {
-                var editorialesView = await _editorialService.GetEditorialesByEditorialID(editorialID);
+                var editorialesView = await _editorialService.GetEditorialesByEditorialID(id);
                 if (editorialesView == null)
                 {
-                    response = Convert.ToString("No se ha encontrado ningún Autor");
+                    response = Convert.ToString("No se ha encontrado ningúna Editorial");
                     return NotFound(new EventMessage { Message = response });
                 }
                 return View(editorialesView);
@@ -90,46 +90,102 @@ namespace BluLogisticsMVC.Controllers
             }
         }
 
-        //// GET: EditorialesController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+        // GET: EditorialesController/Edit/guid
+        public async Task<IActionResult> Edit([FromRoute]Guid id)
+        {
+            try
+            {
+                var editorialesView = await _editorialService.GetEditorialesByEditorialID(id);
+                if (editorialesView == null)
+                {
+                    response = Convert.ToString("No se ha encontrado ningúna Editorial");
+                    return NotFound(new EventMessage { Message = response });
+                }
+                return View(editorialesView);
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+                return BadRequest(new EventMessage { Message = "Error en el servicio GetEditorialesByEditorialID - Contacte al Adminsitrador" });
+            }
+        }
 
-        //// POST: EditorialesController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        // POST: EditorialesController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit([Bind("EditorialesID,Nombre,Sede")] EditorialesView editorialesView)
+        {
+            try
+            {
+                try
+                {
+                    int result = await _editorialService.UpdateEditoriales(editorialesView);
+                    if (result == 0)
+                    {
+                        response = Convert.ToString("No se ha podido modificar la editorial");
+                        return NotFound(new EventMessage { Message = response });
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    response = ex.Message;
+                    return BadRequest(new EventMessage { Message = "Error en el servicio UpdateEditoriales - Contacte al Adminsitrador" });
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
 
-        //// GET: EditorialesController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
+        // GET: EditorialesController/Delete/5
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
+        {
+            try
+            {
+                var editorialesView = await _editorialService.GetEditorialesByEditorialID(id);
+                if (editorialesView == null)
+                {
+                    response = Convert.ToString("No se ha encontrado ningúna Editorial");
+                    return NotFound(new EventMessage { Message = response });
+                }
+                return View(editorialesView);
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+                return BadRequest(new EventMessage { Message = "Error en el servicio GetEditorialesByEditorialID - Contacte al Adminsitrador" });
+            }
+        }
 
-        //// POST: EditorialesController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        // POST: EditorialesController/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute] Guid id)
+        {
+            try
+            {
+                try
+                {
+                    int result = await _editorialService.DeleteEditoriales(id);
+                    if (result == 0)
+                    {
+                        response = Convert.ToString("No se ha podido borrar la editorial");
+                        return NotFound(new EventMessage { Message = response });
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    response = ex.Message;
+                    return BadRequest(new EventMessage { Message = "Error en el servicio DeleteConfirmed - Contacte al Adminsitrador" });
+                }
+            }
+            catch
+            {
+                return View();
+            }
+        }
     }
 }

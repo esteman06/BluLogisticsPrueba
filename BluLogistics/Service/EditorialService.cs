@@ -50,7 +50,7 @@ namespace BluLogisticsMVC.Services
 
                 if (temp != null)
                 {
-                        EditorialesView editorialesView = MapEditoriales(temp);
+                    EditorialView = MapEditoriales(temp);
                 }
                 return EditorialView;
             }
@@ -99,7 +99,7 @@ namespace BluLogisticsMVC.Services
                 if (editorial != null)
                 {
                     var existsEditorial = await _context.Editoriales.Where(x => x.Nombre.ToUpper().Equals(editorialesView.Nombre.ToUpper()) && x.Sede.ToUpper().Equals(editorialesView.Sede.ToUpper())).FirstOrDefaultAsync();
-                    if (existsEditorial != null)
+                    if (existsEditorial == null)
                     {
                         editorial.Nombre = editorialesView.Nombre;
                         editorial.Sede = editorialesView.Sede;
@@ -119,7 +119,26 @@ namespace BluLogisticsMVC.Services
             return result;
         }
 
-
+        public async Task<int> DeleteEditoriales(Guid editorialesID)
+        {
+            int result = 0;
+            try
+            {
+                var editorial = await _context.Editoriales.Where(x => x.EditorialesID.Equals(editorialesID)).FirstOrDefaultAsync();
+                if (editorial != null)
+                {
+                    _context.Editoriales.Remove(editorial);
+                    await _context.SaveChangesAsync();
+                    result = 1;
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = ex.ToString();
+            }
+            return result;
+        }
         private EditorialesView MapEditoriales(Editoriales editoriales)
         {
             EditorialesView editorialesView = new EditorialesView()

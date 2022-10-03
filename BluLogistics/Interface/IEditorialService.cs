@@ -11,5 +11,6 @@ namespace BluLogisticsMVC.Interfaces
         Task<EditorialesView> GetEditorialesByEditorialID(Guid editorialID);
         Task<int> CreateEditorial(EditorialesView editorialesView);       
         Task<int> UpdateEditoriales(EditorialesView editorialesView);
+        Task<int> DeleteEditoriales(Guid editorialID);
     }
 }
