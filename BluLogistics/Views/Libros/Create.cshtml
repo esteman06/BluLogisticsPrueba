@@ -1,5 +1,54 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using BluLogistics.Entitys
+@model BluLogistics.Entitys.LibrosView
+
 @{
+    ViewData["Title"] = "Crear";
+}
+
+<h1>Crear</h1>
+
+<h4>libro</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="NombreEditorial" class="control-label"></label>
+                @Html.DropDownList("Editoriales")
+                <span asp-validation-for="NombreEditorial" class="text-danger"></span>
+            </div> 
+            <div class="form-group">
+                <label asp-for="NombreAutor" class="control-label"></label>
+                @Html.DropDownList("Autores")
+                <span asp-validation-for="NombreAutor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Titulo" class="control-label"></label>
+                <input asp-for="Titulo" class="form-control" />
+                <span asp-validation-for="Titulo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sinopsis" class="control-label"></label>
+                <input asp-for="Sinopsis" class="form-control" />
+                <span asp-validation-for="Sinopsis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NPaginas" class="control-label"></label>
+                <input asp-for="NPaginas" class="form-control" />
+                <span asp-validation-for="NPaginas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

@@ -1,8 +1,13 @@
-﻿using BluLogisticsMVC.Helpers;
+﻿using BluLogistics.DataModel.Model;
+using BluLogistics.Entitys;
+using BluLogisticsMVC.Helpers;
 using BluLogisticsMVC.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BluLogisticsMVC.Controllers
@@ -10,10 +15,13 @@ namespace BluLogisticsMVC.Controllers
     public class LibrosController : Controller
     {
         private ILibrosServices _librosService;
+        private readonly BluLogisticsContext _context;
+
         string response = null;
-        public LibrosController(ILibrosServices librosService)
+        public LibrosController(ILibrosServices librosService, BluLogisticsContext context)
         {
             _librosService = librosService;
+            _context = context;
         }
         // GET: LibrosController
         public async Task<IActionResult> Index()
@@ -58,6 +66,24 @@ namespace BluLogisticsMVC.Controllers
         // GET: LibrosController/Create
         public ActionResult Create()
         {
+            var itemsEditoriales = new List<SelectListItem>();
+            itemsEditoriales = _context.Editoriales.Select(c => new SelectListItem()
+            {
+                Text = c.Nombre,
+                Value = c.EditorialesID.ToString()
+
+            }).OrderBy(x => x.Text).ToList();
+            ViewBag.Editoriales = itemsEditoriales;
+
+            var itemsAutores = new List<SelectListItem>();
+            itemsAutores = _context.Autores.Select(c => new SelectListItem()
+            {
+                Text = c.Nombre + " " + c.Apellidos,
+                Value = c.AutoresID.ToString()
+
+            }).OrderBy(x => x.Text).ToList();
+            ViewBag.Autores = itemsAutores;
+
             return View();
         }
 
@@ -77,8 +103,41 @@ namespace BluLogisticsMVC.Controllers
         }
 
         // GET: LibrosController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit([FromRoute]Guid id)
         {
+            var itemsEditoriales = new List<SelectListItem>();
+            itemsEditoriales = _context.Editoriales.Select(c => new SelectListItem()
+            {
+                Text = c.Nombre,
+                Value = c.EditorialesID.ToString()
+
+            }).OrderBy(x => x.Text).ToList();
+            ViewBag.Editoriales = itemsEditoriales;
+
+            var itemsAutores = new List<SelectListItem>();
+            itemsAutores = _context.Autores.Select(c => new SelectListItem()
+            {
+                Text = c.Nombre + " " + c.Apellidos,
+                Value = c.AutoresID.ToString()
+
+            }).OrderBy(x => x.Text).ToList();
+            ViewBag.Autores = itemsAutores;
+
+            try
+            {
+                var librosView = await _librosService.GetLibrosByLibroID(id);
+                if (librosView == null)
+                {
+                    response = Convert.ToString("No se ha encontrado ningún Libro");
+                    return NotFound(new EventMessage { Message = response });
+                }
+                return View(librosView);
+            }
+            catch (Exception ex)
+            {
+                response = ex.Message;
+                return BadRequest(new EventMessage { Message = "Error en el servicio GetLibrosByLibroID - Contacte al Adminsitrador" });
+            }
             return View();
         }
 
