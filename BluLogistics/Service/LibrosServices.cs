@@ -118,7 +118,6 @@ namespace BluLogisticsMVC.Services
                 Libros libro = await _context.Libros.Where(x => x.Tittulo.Equals(librosView.Titulo)).FirstOrDefaultAsync();
                 if (libro == null)
                 {
-                    result = 1;
                     Guid newGuid = Guid.NewGuid();
                     Libros newLibro = new Libros
                     {
@@ -131,6 +130,18 @@ namespace BluLogisticsMVC.Services
                     _context.Libros.Add(newLibro);
                     await _context.SaveChangesAsync();
 
+                    Guid newGuidAutoresHasLibros = Guid.NewGuid();
+                    Autores_has_libros newAutores_Has_Libros = new Autores_has_libros
+                    {
+                        Autores_has_librosID = newGuidAutoresHasLibros,
+                        AutoresID = librosView.AutoresID,
+                        LibrosID = newGuid
+                    };
+
+                    _context.Autores_Has_Libros.Add(newAutores_Has_Libros);
+                    await _context.SaveChangesAsync();
+
+                    result = 1;
                     return result;
                 }
             }

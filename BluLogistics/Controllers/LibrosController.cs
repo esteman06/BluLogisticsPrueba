@@ -90,11 +90,25 @@ namespace BluLogisticsMVC.Controllers
         // POST: LibrosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create([Bind("EditorialesID,AutoresID,Titulo,Sinopsis,NPaginas")] LibrosView librosView)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    int result = await _librosService.CreateLibros(librosView);
+                    if (result == 0)
+                    {
+                        response = Convert.ToString("No se ha podido crear el Libro");
+                        return NotFound(new EventMessage { Message = response });
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    response = ex.Message;
+                    return BadRequest(new EventMessage { Message = "Error en el servicio CreateLibros - Contacte al Adminsitrador" });
+                }
             }
             catch
             {
