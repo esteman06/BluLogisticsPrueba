@@ -1,0 +1,65 @@
+﻿@model IEnumerable<BluLogistics.Entitys.LibrosView>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Crear un Nuevo Libro</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LibrosID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreEditorial)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NombreAutor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Titulo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sinopsis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NPaginas)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LibrosID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreEditorial)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NombreAutor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sinopsis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NPaginas)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.LibrosID">Modificar</a> |
+                <a asp-action="Details" asp-route-id="@item.LibrosID">Detalle</a> |
+                <a asp-action="Delete" asp-route-id="@item.LibrosID">Borrar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

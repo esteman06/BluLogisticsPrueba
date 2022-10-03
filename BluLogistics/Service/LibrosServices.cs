@@ -64,13 +64,35 @@ namespace BluLogisticsMVC.Services
             return null;
         }
 
-        public async Task<List<LibrosView>> GetLibrosByLiborsID(Guid librosID)
+        public async Task<LibrosView> GetLibrosByLibroID(Guid libroID)
+        {
+            try
+            {
+                LibrosView libroView = new LibrosView();
+
+                var temp = await _context.Libros.Where(x => x.LibrosID.Equals(libroID)).FirstOrDefaultAsync();
+
+                if (temp != null)
+                {
+
+                    libroView = MapLibros(temp);                    
+                }
+                return libroView;
+            }
+            catch (Exception ex)
+            {
+                var error = ex.ToString();
+            }
+            return null;
+        }
+
+        public async Task<List<LibrosView>> GetLibrosByAutorID(Guid AutorID)
         {
             try
             {
                 List<LibrosView> librosViews = new List<LibrosView>();
 
-                var tempList = await _context.Libros.Where(x => x.LibrosID.Equals(librosID)).ToListAsync();
+                var tempList = await _context.Libros.Where(x => x.EditorialesID.Equals(AutorID)).ToListAsync();
 
                 if (tempList.Count > 0)
                 {
@@ -88,8 +110,7 @@ namespace BluLogisticsMVC.Services
             }
             return null;
         }
-
-        public async Task<int> CreateLibors(LibrosView librosView)
+        public async Task<int> CreateLibros(LibrosView librosView)
         {
             int result = 0;
             try
@@ -121,7 +142,7 @@ namespace BluLogisticsMVC.Services
             return result;
         }
 
-        public async Task<int> UpdateLibors(LibrosView librosView)
+        public async Task<int> UpdateLibros(LibrosView librosView)
         {
             int result = 0;
             try
@@ -152,12 +173,36 @@ namespace BluLogisticsMVC.Services
             return result;
         }
 
+        public async Task<int> DeleteLibro(Guid libroID)
+        {
+            int result = 0;
+            try
+            {
+                var libro = await _context.Libros.Where(x => x.LibrosID.Equals(libroID)).FirstOrDefaultAsync();
+                if (libro != null)
+                {
+                    _context.Libros.Remove(libro);
+                    await _context.SaveChangesAsync();
+                    result = 1;
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = ex.ToString();
+            }
+            return result;
+        }
         private LibrosView MapLibros(Libros libros)
         {
+            Guid autorID = _context.Autores_Has_Libros.Where(x => x.LibrosID.Equals(libros.LibrosID)).Select(x => x.AutoresID).FirstOrDefault();
             LibrosView librosView = new LibrosView()
             {
                 LibrosID = libros.LibrosID,
                 EditorialesID = libros.EditorialesID,
+                NombreEditorial = _context.Editoriales.Where(x => x.EditorialesID.Equals(libros.EditorialesID)).Select(x => x.Nombre).FirstOrDefault(),
+                AutoresID = autorID,
+                NombreAutor = _context.Autores.Where(x => x.AutoresID.Equals(autorID)).Select(x => x.Nombre+ " " + x.Apellidos).FirstOrDefault(),
                 Titulo = libros.Tittulo,
                 Sinopsis = libros.Sinopsis,
                 NPaginas = libros.NPaginas

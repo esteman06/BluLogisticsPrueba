@@ -8,6 +8,9 @@ namespace BluLogistics.Entitys
     {
         public Guid? LibrosID { get; set; }
         public Guid EditorialesID { get; set; }
+        public string NombreEditorial { get; set; }
+        public Guid AutoresID { get; set; }
+        public string NombreAutor { get; set; }
         [Required]
         [StringLength(45)]
         public string Titulo { get; set; }

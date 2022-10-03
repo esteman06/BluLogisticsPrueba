@@ -39,29 +39,19 @@ namespace BluLogisticsMVC.Services
             return null;
         }
 
-        public async Task<List<AutoresView>> GetAutoresByEditorialID(Guid editorialID)
+        public async Task<AutoresView> GetAutoresByAutorID(Guid autorID)
         {
             try
             {
-                List<AutoresView> autoresViews = new List<AutoresView>();
+                AutoresView autoresView = new AutoresView();
 
-                var tempList = await _context.Autores
-                    .Join(_context.Autores_Has_Libros, a => a.AutoresID, ahl => ahl.AutoresID, (a, ahl) => new { a, ahl })
-                    .Join(_context.Libros, aa => aa.ahl.LibrosID, l => l.LibrosID, (aa, l) => new { aa, l })
-                    .Join(_context.Editoriales, ax => ax.l.EditorialesID, e => e.EditorialesID, (ax, e) => new { ax, e })
-                    .Where(x => x.e.EditorialesID.Equals(editorialID))
-                    .Select(x => new Autores{ AutoresID = x.ax.aa.a.AutoresID , Nombre = x.ax.aa.a.Nombre , Apellidos = x.ax.aa.a.Apellidos})
-                    .Distinct().ToListAsync();
+                Autores temp = await _context.Autores.Where(x => x.AutoresID.Equals(autorID)).FirstOrDefaultAsync();
 
-                if (tempList.Count > 0)
+                if (temp != null)
                 {
-                    foreach (Autores item in tempList)
-                    {
-                        AutoresView autoresView = MapAutores(item);
-                        autoresViews.Add(autoresView);
-                    }
+                    autoresView = MapAutores(temp);
                 }
-                return autoresViews.OrderBy(x => x.Nombre).ThenBy(x => x.Apellidos).ToList();
+                return autoresView;
             }
             catch (Exception ex)
             {
@@ -69,6 +59,36 @@ namespace BluLogisticsMVC.Services
             }
             return null;
         }
+        //public async Task<List<AutoresView>> GetAutoresByEditorialID(Guid editorialID)
+        //{
+        //    try
+        //    {
+        //        List<AutoresView> autoresViews = new List<AutoresView>();
+
+        //        var tempList = await _context.Autores
+        //            .Join(_context.Autores_Has_Libros, a => a.AutoresID, ahl => ahl.AutoresID, (a, ahl) => new { a, ahl })
+        //            .Join(_context.Libros, aa => aa.ahl.LibrosID, l => l.LibrosID, (aa, l) => new { aa, l })
+        //            .Join(_context.Editoriales, ax => ax.l.EditorialesID, e => e.EditorialesID, (ax, e) => new { ax, e })
+        //            .Where(x => x.e.EditorialesID.Equals(editorialID))
+        //            .Select(x => new Autores{ AutoresID = x.ax.aa.a.AutoresID , Nombre = x.ax.aa.a.Nombre , Apellidos = x.ax.aa.a.Apellidos})
+        //            .Distinct().ToListAsync();
+
+        //        if (tempList.Count > 0)
+        //        {
+        //            foreach (Autores item in tempList)
+        //            {
+        //                AutoresView autoresView = MapAutores(item);
+        //                autoresViews.Add(autoresView);
+        //            }
+        //        }
+        //        return autoresViews.OrderBy(x => x.Nombre).ThenBy(x => x.Apellidos).ToList();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var error = ex.ToString();
+        //    }
+        //    return null;
+        //}
 
         public async Task<int> CreateAutores(AutoresView autoresView)
         {
@@ -76,7 +96,7 @@ namespace BluLogisticsMVC.Services
             try
             {
                 var existsAutor = await _context.Autores.Where(x => x.Nombre.ToUpper().Equals(autoresView.Nombre.ToUpper()) && x.Apellidos.ToUpper().Equals(autoresView.Apellidos.ToUpper())).FirstOrDefaultAsync();
-                if (existsAutor != null)
+                if (existsAutor == null)
                 {
                     Guid newGuidAutor = Guid.NewGuid();
                     Autores newAutor = new Autores
@@ -107,7 +127,7 @@ namespace BluLogisticsMVC.Services
                 if (autor != null)
                 {
                     var existsAutor = await _context.Autores.Where(x => x.Nombre.ToUpper().Equals(autoresView.Nombre.ToUpper()) && x.Apellidos.ToUpper().Equals(autoresView.Apellidos.ToUpper())).FirstOrDefaultAsync();
-                    if (existsAutor != null)
+                    if (existsAutor == null)
                     {
                         autor.Nombre = autoresView.Nombre;
                         autor.Apellidos = autoresView.Apellidos;
@@ -127,6 +147,26 @@ namespace BluLogisticsMVC.Services
             return result;
         }
 
+        public async Task<int> DeleteAutores(Guid autorID)
+        {
+            int result = 0;
+            try
+            {
+                var autor = await _context.Autores.Where(x => x.AutoresID.Equals(autorID)).FirstOrDefaultAsync();
+                if (autor != null)
+                {
+                    _context.Autores.Remove(autor);
+                    await _context.SaveChangesAsync();
+                    result = 1;
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = ex.ToString();
+            }
+            return result;
+        }
         private AutoresView MapAutores(Autores autores)
         {
             AutoresView autoresView = new AutoresView()
@@ -137,6 +177,5 @@ namespace BluLogisticsMVC.Services
             };
             return autoresView;
         }
-
     }
 }

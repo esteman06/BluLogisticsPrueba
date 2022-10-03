@@ -9,8 +9,10 @@ namespace BluLogisticsMVC.Interfaces
     {
         Task<List<LibrosView>> GetAllLibors();
         Task<List<LibrosView>> GetLibrosByEditorialID(Guid editorialID);
-        Task<List<LibrosView>> GetLibrosByLiborsID(Guid liborsID);
-        Task<int> CreateLibors(LibrosView librosView);
-        Task<int> UpdateLibors(LibrosView librosView);
+        Task<LibrosView> GetLibrosByLibroID(Guid libroID);
+        Task<List<LibrosView>> GetLibrosByAutorID(Guid autorID);
+        Task<int> CreateLibros(LibrosView librosView);
+        Task<int> UpdateLibros(LibrosView librosView);
+        Task<int> DeleteLibro(Guid libroID);
     }
 }
